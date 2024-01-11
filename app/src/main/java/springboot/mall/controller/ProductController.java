@@ -1,5 +1,7 @@
 package springboot.mall.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,13 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @GetMapping("/products")
+    public ResponseEntity<List<Product>> getProducts(){
+
+        List<Product> productList = productService.getProducts();
+        return ResponseEntity.status(HttpStatus.OK).body(productList);   //查詢全部，則固定回200，若空也視為成功
+    }
+
     @GetMapping("/products/{productId}")
     public ResponseEntity<Product> getProduct(@PathVariable Integer productId){
         
@@ -30,7 +39,7 @@ public class ProductController {
         if (product != null){
             return ResponseEntity.status(HttpStatus.OK).body(product);
         }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  //查詢單個，要檢查是否存在，否則回404
         }
     }
 
