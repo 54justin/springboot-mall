@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import springboot.mall.constant.ProductCategory;
+import springboot.mall.dao.ProductQueryParams;
 import springboot.mall.dto.ProductRequest;
 import springboot.mall.model.Product;
 import springboot.mall.service.ProductService;
@@ -32,7 +33,12 @@ public class ProductController {
             @RequestParam(required = false) ProductCategory category,   //category可選
             @RequestParam(required = false) String search
     ){
-        List<Product> productList = productService.getProducts(category, search);
+        // 簡化參數傳遞
+        ProductQueryParams productQueryParams = new ProductQueryParams();
+        productQueryParams.setCategory(category);
+        productQueryParams.setSearch(search);
+
+        List<Product> productList = productService.getProducts(productQueryParams);
 
         return ResponseEntity.status(HttpStatus.OK).body(productList);   //查詢全部，則固定回200，若空也視為成功
     }

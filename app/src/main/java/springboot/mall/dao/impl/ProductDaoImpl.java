@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import springboot.mall.constant.ProductCategory;
 import springboot.mall.dao.ProductDao;
+import springboot.mall.dao.ProductQueryParams;
 import springboot.mall.dto.ProductRequest;
 import springboot.mall.model.Product;
 import springboot.mall.rowmapper.ProductRowMapper;
@@ -27,21 +28,21 @@ public class ProductDaoImpl implements ProductDao{
     private JdbcTemplate JdbcTemplate;
 
     @Override
-    public List<Product> getProducts(ProductCategory category, String search){
+    public List<Product> getProducts(ProductQueryParams productQueryParams){
         String sql = "SELECT product_id, product_name, category, image_url, price, stock, description, " +
                      "created_date, last_modified_date " +
                      "FROM product WHERE 1=1";    // WHERE 1=1, 用於後面組合where查詢條件
 
         Map<String, Object> map = new HashMap<>();
 
-        if (category != null){
+        if (productQueryParams.getCategory() != null){
             sql = sql + " AND category = :category";
-            map.put("category", category.name());  //Enum要用.name()取值
+            map.put("category", productQueryParams.getCategory().name());  //Enum要用.name()取值
         }
 
-        if (search != null){
+        if (productQueryParams.getSearch() != null){
             sql = sql + " AND product_name LIKE :search";
-            map.put("search", "%" + search + "%");  //%一定要寫在map值裡，不能寫在sql         
+            map.put("search", "%" + productQueryParams.getSearch() + "%");  //%一定要寫在map值裡，不能寫在sql         
         }
 
         List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
