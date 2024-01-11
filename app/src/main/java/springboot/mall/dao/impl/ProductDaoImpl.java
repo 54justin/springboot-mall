@@ -27,6 +27,12 @@ public class ProductDaoImpl implements ProductDao{
     private JdbcTemplate JdbcTemplate;
 
     @Override
+    public Integer countProduct(ProductQueryParams productQueryParams){
+
+        return this.getProductCount();
+    }
+
+    @Override
     public List<Product> getProducts(ProductQueryParams productQueryParams){
         String sql = "SELECT product_id, product_name, category, image_url, price, stock, description, " +
                      "created_date, last_modified_date " +
@@ -75,7 +81,7 @@ public class ProductDaoImpl implements ProductDao{
     @Override
     public Integer getProductCount(){
         Integer count = 0;
-        String sql = "SELECT COUNT(*) FROM product";
+        String sql = "SELECT COUNT(*) FROM product WHERE 1=1";
 
         count = JdbcTemplate.queryForObject(sql, Integer.class);
         return count;

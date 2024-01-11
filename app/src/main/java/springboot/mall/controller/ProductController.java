@@ -24,6 +24,7 @@ import springboot.mall.dao.ProductQueryParams;
 import springboot.mall.dto.ProductRequest;
 import springboot.mall.model.Product;
 import springboot.mall.service.ProductService;
+import springboot.mall.util.Page;
 
 @Validated
 @RestController
@@ -33,7 +34,7 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProducts(
+    public ResponseEntity<Page<Product>> getProducts(
             // 查詢條件 Filtering
             @RequestParam(required = false) ProductCategory category,   //category可選
             @RequestParam(required = false) String search,
@@ -55,9 +56,20 @@ public class ProductController {
         productQueryParams.setLimit(limit);   
         productQueryParams.setOffset(offset);                   
 
+        // 取得 product list
         List<Product> productList = productService.getProducts(productQueryParams);
 
-        return ResponseEntity.status(HttpStatus.OK).body(productList);   //查詢全部，則固定回200，若空也視為成功
+        // 取得 product 總數
+        Integer total = productService.countProduct(productQueryParams);
+
+        //分頁，組合要回傳給前端的json值
+        Page<Product> page = new Page<>();
+        page.setLimit(limit);
+        page.setOffset(offset);
+        page.setTotal(total);
+        page.setResults(productList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(page);   //查詢全部，則固定回200，若空也視為成功
     }
 
     @GetMapping("/products/{productId}")
