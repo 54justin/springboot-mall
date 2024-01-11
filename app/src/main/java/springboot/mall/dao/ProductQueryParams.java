@@ -7,9 +7,27 @@ public class ProductQueryParams {
     String search;
     String orderBy;
     String sort;
+    Integer limit;           //取得幾筆數據
+    Integer offset;           //跳過幾筆    
 
     public String getOrderBy() {
         return this.orderBy;
+    }
+
+    public Integer getLimit() {
+        return this.limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
+
+    public Integer getOffset() {
+        return this.offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
     }
 
     public void setOrderBy(String orderBy) {

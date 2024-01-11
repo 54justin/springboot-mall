@@ -34,6 +34,7 @@ public class ProductDaoImpl implements ProductDao{
 
         Map<String, Object> map = new HashMap<>();
 
+        // 查詢條件
         if (productQueryParams.getCategory() != null){
             sql = sql + " AND category = :category";
             map.put("category", productQueryParams.getCategory().name());  //Enum要用.name()取值
@@ -43,7 +44,12 @@ public class ProductDaoImpl implements ProductDao{
             sql = sql + " AND product_name LIKE :search";
             map.put("search", "%" + productQueryParams.getSearch() + "%");  //%一定要寫在map值裡，不能寫在sql         
         }
+
+        // 排序
         sql = sql + " ORDER BY "+ productQueryParams.getOrderBy() + " " + productQueryParams.getSort();  //排序         
+        
+        // 分頁
+        // LIMIT & OFFSET 在oracle實作較複雜，暫不實作productQueryParams.getlimit(), productQueryParams.getoffset()
 
         List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 

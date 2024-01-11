@@ -3,10 +3,13 @@ package springboot.mall.controller;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +25,7 @@ import springboot.mall.dto.ProductRequest;
 import springboot.mall.model.Product;
 import springboot.mall.service.ProductService;
 
+@Validated
 @RestController
 public class ProductController {
 
@@ -36,7 +40,11 @@ public class ProductController {
 
             // 排序 Sorting
             @RequestParam(defaultValue = "created_date") String orderBy,  //排序方式(預設"最新")
-            @RequestParam(defaultValue = "desc") String sort              //排序依據欄位(預設大TO小)
+            @RequestParam(defaultValue = "desc") String sort,             //排序依據欄位(預設大TO小)
+
+            // 分頁 Pagination
+            @RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer limit,  //取得幾筆數據,要加@Validated ！！！
+            @RequestParam(defaultValue = "0") @Min(0) Integer offset             //跳過幾筆,要加@Validated ！！！
     ){
         // 簡化參數傳遞
         ProductQueryParams productQueryParams = new ProductQueryParams();
@@ -44,6 +52,8 @@ public class ProductController {
         productQueryParams.setSearch(search);
         productQueryParams.setOrderBy(orderBy);
         productQueryParams.setSort(sort);        
+        productQueryParams.setLimit(limit);   
+        productQueryParams.setOffset(offset);                   
 
         List<Product> productList = productService.getProducts(productQueryParams);
 
