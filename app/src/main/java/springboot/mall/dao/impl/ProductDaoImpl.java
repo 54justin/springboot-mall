@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import springboot.mall.constant.ProductCategory;
 import springboot.mall.dao.ProductDao;
 import springboot.mall.dao.ProductQueryParams;
 import springboot.mall.dto.ProductRequest;
@@ -44,6 +43,7 @@ public class ProductDaoImpl implements ProductDao{
             sql = sql + " AND product_name LIKE :search";
             map.put("search", "%" + productQueryParams.getSearch() + "%");  //%一定要寫在map值裡，不能寫在sql         
         }
+        sql = sql + " ORDER BY "+ productQueryParams.getOrderBy() + " " + productQueryParams.getSort();  //排序         
 
         List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 
