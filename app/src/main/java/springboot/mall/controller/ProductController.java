@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import springboot.mall.constant.ProductCategory;
 import springboot.mall.dto.ProductRequest;
 import springboot.mall.model.Product;
 import springboot.mall.service.ProductService;
@@ -26,9 +28,12 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProducts(){
+    public ResponseEntity<List<Product>> getProducts(
+            @RequestParam(required = false) ProductCategory category,   //category可選
+            @RequestParam(required = false) String search
+    ){
+        List<Product> productList = productService.getProducts(category, search);
 
-        List<Product> productList = productService.getProducts();
         return ResponseEntity.status(HttpStatus.OK).body(productList);   //查詢全部，則固定回200，若空也視為成功
     }
 
