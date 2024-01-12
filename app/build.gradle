@@ -19,12 +19,10 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit test framework.
-    testImplementation 'junit:junit:4.13.2'
+
 
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:30.1.1-jre'
-
 
 	implementation 'com.oracle.database.jdbc:ojdbc8:21.9.0.0'
 	//implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'    //加這個才能用NamedParameterJdbcTemplate
@@ -32,8 +30,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web'	
 	implementation 'org.springframework.boot:spring-boot-starter-validation'     //變數驗證(Ex：@NotNull)
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'org.springframework.boot:spring-boot-starter-aop'	        //aop
+	
+    // 測試
+    // Use JUnit test framework.
+	testImplementation 'org.junit.vintage:junit-vintage-engine' 	            //限制使用Junit 5，禁用Junit 4測試    
+    //testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	runtimeOnly 'com.h2database:h2'    //H2資料庫	
+    
+    implementation 'org.springframework.boot:spring-boot-starter-aop'	        //aop
     implementation 'com.oracle.ojdbc:orai18n:19.3.0.0'		    
 }
 
