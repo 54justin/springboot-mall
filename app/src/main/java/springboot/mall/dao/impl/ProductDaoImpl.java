@@ -29,7 +29,7 @@ public class ProductDaoImpl implements ProductDao{
     @Override
     public Integer countProduct(ProductQueryParams productQueryParams){
 
-        return this.getProductCount();
+        return this.getProductCount(productQueryParams);
     }
 
     @Override
@@ -41,15 +41,7 @@ public class ProductDaoImpl implements ProductDao{
         Map<String, Object> map = new HashMap<>();
 
         // 查詢條件
-        if (productQueryParams.getCategory() != null){
-            sql = sql + " AND category = :category";
-            map.put("category", productQueryParams.getCategory().name());  //Enum要用.name()取值
-        }
-
-        if (productQueryParams.getSearch() != null){
-            sql = sql + " AND product_name LIKE :search";
-            map.put("search", "%" + productQueryParams.getSearch() + "%");  //%一定要寫在map值裡，不能寫在sql         
-        }
+        addFilteringSql(sql,map,productQueryParams);
 
         // 排序
         sql = sql + " ORDER BY "+ productQueryParams.getOrderBy() + " " + productQueryParams.getSort();  //排序         
@@ -79,12 +71,16 @@ public class ProductDaoImpl implements ProductDao{
     }
 
     @Override
-    public Integer getProductCount(){
-        Integer count = 0;
+    public Integer getProductCount(ProductQueryParams productQueryParams){
         String sql = "SELECT COUNT(*) FROM product WHERE 1=1";
 
-        count = JdbcTemplate.queryForObject(sql, Integer.class);
-        return count;
+        Map<String, Object> map = new HashMap<>();
+
+        // 查詢條件
+        addFilteringSql(sql,map,productQueryParams);
+
+        Integer total = JdbcTemplate.queryForObject(sql, Integer.class);
+        return total;
     }
 
     @Override
@@ -112,7 +108,7 @@ public class ProductDaoImpl implements ProductDao{
 
         namedParameterJdbcTemplate.update(sql, map);
 
-        Integer productId = this.getProductCount();
+        Integer productId = this.getProductCount(null);
 
         return productId;
     }
@@ -147,5 +143,21 @@ public class ProductDaoImpl implements ProductDao{
         map.put("productId", productId);
 
         namedParameterJdbcTemplate.update(sql, map);
-    }    
+    }
+
+    private String addFilteringSql(String sql, Map<String, Object> map, ProductQueryParams productQueryParams){
+
+        // 查詢條件
+        if (productQueryParams.getCategory() != null){
+            sql = sql + " AND category = :category";
+            map.put("category", productQueryParams.getCategory().name());  //Enum要用.name()取值
+        }
+
+        if (productQueryParams.getSearch() != null){
+            sql = sql + " AND product_name LIKE :search";
+            map.put("search", "%" + productQueryParams.getSearch() + "%");  //%一定要寫在map值裡，不能寫在sql         
+        }
+
+        return sql;
+    }
 }

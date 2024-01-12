@@ -11,7 +11,7 @@ public interface ProductDao {
 
     List<Product> getProducts(ProductQueryParams productQueryParams);
     Product getProductById(Integer productId);
-    Integer getProductCount();
+    Integer getProductCount(ProductQueryParams productQueryParams);
     Integer createProduct(ProductRequest productRequest);
     void updateProduct(Integer productId, ProductRequest productRequest);
     void deleteProductById(Integer productId);    
