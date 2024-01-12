@@ -1,6 +1,10 @@
 package springboot.mall.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import springboot.mall.constant.ProductCategory;
+import springboot.mall.dto.ProductRequest;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,18 +15,11 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import springboot.mall.App;
-import springboot.mall.constant.ProductCategory;
-import springboot.mall.dto.ProductRequest;
-
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-// import org.junit.Test;
-// import static org.junit.Assert.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -50,9 +47,6 @@ public class ProductControllerTest {
                 .andExpect(jsonPath("$.description", notNullValue()))
                 .andExpect(jsonPath("$.createdDate", notNullValue()))
                 .andExpect(jsonPath("$.lastModifiedDate", notNullValue()));
-
-        // App classUnderTest = new App();                
-        // assertNotNull("app should have a greeting", classUnderTest.getGreeting());                
     }
 
     @Test

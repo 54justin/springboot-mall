@@ -34,9 +34,12 @@ dependencies {
     // 測試
     // Use JUnit test framework.
 	testImplementation 'org.junit.vintage:junit-vintage-engine' 	            //限制使用Junit 5，禁用Junit 4測試    
-    //testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'  
+        
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	runtimeOnly 'com.h2database:h2'    //H2資料庫	
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     
     implementation 'org.springframework.boot:spring-boot-starter-aop'	        //aop
     implementation 'com.oracle.ojdbc:orai18n:19.3.0.0'		    
