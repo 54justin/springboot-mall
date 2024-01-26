@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import springboot.mall.dto.CreateOrderRequest;
+import springboot.mall.model.Ex_Order;
 import springboot.mall.service.OrderService;
 
 @RestController
@@ -25,6 +26,17 @@ public class OrderController {
 
         Integer orderId = orderService.createOrder(userId, createOrderRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderId);
+        Ex_Order order = orderService.getOrderById(orderId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
+
+    // @PostMapping("/users/{userId}/orders")
+    // public ResponseEntity<?> queryOrder(@PathVariable Integer userId, 
+    //                                      @RequestBody @Valid CreateOrderRequest createOrderRequest){
+
+    //     Integer orderId = orderService.createOrder(userId, createOrderRequest);
+
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(orderId);
+    // }    
 }

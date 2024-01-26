@@ -18,7 +18,10 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import springboot.mall.dao.OrderDao;
+import springboot.mall.model.Ex_Order;
 import springboot.mall.model.Ex_Order_Item;
+import springboot.mall.rowmapper.OrderItemRowMapper;
+import springboot.mall.rowmapper.OrderRowMapper;
 
 @Component
 public class OrderDaoImpl implements OrderDao{
@@ -89,5 +92,32 @@ public class OrderDaoImpl implements OrderDao{
         }
 
         namedParameterJdbcTemplate.batchUpdate(sql, parameterSources);
+    }
+
+    public Ex_Order getOrderById(Integer orderId){
+        String sql = "SELECT order_id, user_id, total_amount, created_date, last_modified_date " +
+                     "FROM ex_order WHERE order_id = :orderId";
+        Map<String, Object> map = new HashMap<>();
+        map.put("orderId", orderId);
+
+        List<Ex_Order> orderList = namedParameterJdbcTemplate.query(sql, map, new OrderRowMapper());
+
+        if (orderList.size() > 0){
+            return orderList.get(0);
+        }else{
+            return null;
+        }
+    }
+
+    public List<Ex_Order_Item> getOrderItemsByOrderId(Integer orderId){
+        String sql = "SELECT o.order_item_id, o.order_id, o.product_id, o.quantity, o.amount, p.product_name, p.image_url " +
+                     "FROM ex_order_item o, product p " +
+                     "WHERE o.product_id = p.product_id and o.order_id = :orderId ";
+        Map<String, Object> map = new HashMap<>();
+        map.put("orderId", orderId);
+
+        List<Ex_Order_Item> orderItemList = namedParameterJdbcTemplate.query(sql, map, new OrderItemRowMapper());
+
+        return orderItemList;
     }
 }

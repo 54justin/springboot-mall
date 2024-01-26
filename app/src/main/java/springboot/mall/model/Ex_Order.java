@@ -1,6 +1,7 @@
 package springboot.mall.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class Ex_Order {
     
@@ -9,6 +10,16 @@ public class Ex_Order {
     private Integer totalAmount;
     private Date createdDate;
     private Date lastModifiedDate;
+
+    private List<Ex_Order_Item> orderItemList;
+
+    public List<Ex_Order_Item> getOrderItemList() {
+        return this.orderItemList;
+    }
+
+    public void setOrderItemList(List<Ex_Order_Item> orderItemList) {
+        this.orderItemList = orderItemList;
+    }
 
     public Integer getOrderId() {
         return this.orderId;

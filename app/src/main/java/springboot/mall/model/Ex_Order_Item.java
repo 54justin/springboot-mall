@@ -8,6 +8,25 @@ public class Ex_Order_Item {
     private Integer quantity;
     private Integer amount;
 
+    private String productName;
+    private String imageUrl;
+
+    public String getProductName() {
+        return this.productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getImageUrl() {
+        return this.imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public Integer getOrderItemId() {
         return this.orderItemId;
     }
