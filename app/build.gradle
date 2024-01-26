@@ -30,14 +30,17 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web'	
 	implementation 'org.springframework.boot:spring-boot-starter-validation'     //變數驗證(Ex：@NotNull)
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'    
 	
     // 測試
     // Use JUnit test framework.
-	testImplementation 'org.junit.vintage:junit-vintage-engine' 	            //限制使用Junit 5，禁用Junit 4測試    
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'  
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.7.2' //限制使用Junit 5，禁用Junit 4測試    
+
+    testRuntimeOnly "org.junit.platform:junit-platform-commons:1.7.0"
+    //testRuntimeOnly "org.junit:junit-bom:5.7.0-M1"    
         
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	runtimeOnly 'com.h2database:h2'    //H2資料庫	
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     
