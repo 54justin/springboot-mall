@@ -18,6 +18,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import springboot.mall.dao.OrderDao;
+import springboot.mall.dto.OrderQueryParams;
 import springboot.mall.model.Ex_Order;
 import springboot.mall.model.Ex_Order_Item;
 import springboot.mall.rowmapper.OrderItemRowMapper;
@@ -59,6 +60,7 @@ public class OrderDaoImpl implements OrderDao{
         return orderId;
     }
 
+    @Override
     public void createOrderItems(Integer orderId, List<Ex_Order_Item> orderItemList){
         
         // 使用for loop 一條一條 sql 加入數據，效率較低
@@ -94,6 +96,7 @@ public class OrderDaoImpl implements OrderDao{
         namedParameterJdbcTemplate.batchUpdate(sql, parameterSources);
     }
 
+    @Override
     public Ex_Order getOrderById(Integer orderId){
         String sql = "SELECT order_id, user_id, total_amount, created_date, last_modified_date " +
                      "FROM ex_order WHERE order_id = :orderId";
@@ -109,6 +112,7 @@ public class OrderDaoImpl implements OrderDao{
         }
     }
 
+    @Override
     public List<Ex_Order_Item> getOrderItemsByOrderId(Integer orderId){
         String sql = "SELECT o.order_item_id, o.order_id, o.product_id, o.quantity, o.amount, p.product_name, p.image_url " +
                      "FROM ex_order_item o, product p " +
@@ -119,5 +123,49 @@ public class OrderDaoImpl implements OrderDao{
         List<Ex_Order_Item> orderItemList = namedParameterJdbcTemplate.query(sql, map, new OrderItemRowMapper());
 
         return orderItemList;
+    }
+
+    @Override
+    public Integer countOrder(OrderQueryParams orderQueryParams){
+        String sql = "SELECT count(*) FROM ex_order WHERE 1=1 ";
+
+        Map<String, Object> map = new HashMap<>();
+
+        // 查詢條件
+        sql = addFilteringSql(sql, map, orderQueryParams);
+
+        Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
+
+        return total;
+    }
+
+    @Override
+    public List<Ex_Order> getOrders(OrderQueryParams orderQueryParams){
+        String sql = "SELECT order_id, user_id, total_amount, created_date, last_modified_date FROM ex_order WHERE 1=1 ";
+
+        Map<String, Object> map = new HashMap<>();
+
+        // 查詢條件
+        sql = addFilteringSql(sql, map, orderQueryParams);
+
+        // 排序
+        sql = sql + " ORDER BY created_date DESC";
+
+        // 分頁 (下面sql不適用oracle DB)
+        // sql = sql + " LIMIT :limit OFFSET : offset";
+        // map.put("limit", orderQueryParams.getLimit());
+        // map.put("offset", orderQueryParams.getOffset());
+
+        List<Ex_Order> orderList = namedParameterJdbcTemplate.query(sql, map, new OrderRowMapper());
+
+        return orderList;
+    }    
+
+    private String addFilteringSql(String sql, Map<String, Object> map, OrderQueryParams orderQueryParams){
+        if (orderQueryParams.getUserId() != null){
+            sql = sql + "AND user_id = :userId";
+            map.put("userId", orderQueryParams.getUserId());
+        }
+        return sql;
     }
 }
